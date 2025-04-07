@@ -62,7 +62,9 @@ def on_click(row, col):
         return
 
     current_player = "0" if current_player == "X" else "X"
-
+    # Текущий игрок
+    current_player_label = tk.Label(window, text=f"Текущий игрок: {current_player}", font=("Arial", 14))
+    current_player_label.grid(row=5, column=0, columnspan=3, pady=10)
 
 def reset_game():
     global game_over
@@ -86,6 +88,11 @@ for i in range(3):
 # Кнопка "Новая игра"
 reset_button = tk.Button(window, text="Новая игра", font=("Arial", 14), command=reset_game)
 reset_button.grid(row=3, column=0, columnspan=3, pady=10)
+
+# Кнопка "Выход"
+exit_button = tk.Button(window, text="Выход", font=("Arial", 14), command=window.quit)
+exit_button.grid(row=4, column=0, columnspan=3, pady=10)
+
 
 choose_first_player()
 window.mainloop()
