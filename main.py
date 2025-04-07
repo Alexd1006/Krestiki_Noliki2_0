@@ -3,11 +3,19 @@ import tkinter as tk
 
 window = tk.Tk()
 window.title("Крестики-нолики")
-window.geometry("300x380")
+window.geometry("300x420")
 
-current_player = "X"  # начальное значение по умолчанию
+current_player = "X"
 buttons = []
 game_over = False
+
+# Метка для отображения текущего игрока
+current_player_label = tk.Label(window, text="", font=("Arial", 14))
+current_player_label.grid(row=5, column=0, columnspan=3, pady=10)
+
+
+def update_player_label():
+    current_player_label.config(text=f"Ход игрока: {current_player}")
 
 
 def choose_first_player():
@@ -18,6 +26,7 @@ def choose_first_player():
     else:
         current_player = "X"
         messagebox.showwarning("Некорректный выбор", "Выбран некорректный символ. Игрок X ходит первым.")
+    update_player_label()
 
 
 def check_winner():
@@ -26,12 +35,10 @@ def check_winner():
             return True
         if buttons[0][i]["text"] == buttons[1][i]["text"] == buttons[2][i]["text"] != "":
             return True
-
     if buttons[0][0]["text"] == buttons[1][1]["text"] == buttons[2][2]["text"] != "":
         return True
     if buttons[0][2]["text"] == buttons[1][1]["text"] == buttons[2][0]["text"] != "":
         return True
-
     return False
 
 
@@ -62,9 +69,8 @@ def on_click(row, col):
         return
 
     current_player = "0" if current_player == "X" else "X"
-    # Текущий игрок
-    current_player_label = tk.Label(window, text=f"Текущий игрок: {current_player}", font=("Arial", 14))
-    current_player_label.grid(row=5, column=0, columnspan=3, pady=10)
+    update_player_label()
+
 
 def reset_game():
     global game_over
@@ -92,7 +98,6 @@ reset_button.grid(row=3, column=0, columnspan=3, pady=10)
 # Кнопка "Выход"
 exit_button = tk.Button(window, text="Выход", font=("Arial", 14), command=window.quit)
 exit_button.grid(row=4, column=0, columnspan=3, pady=10)
-
 
 choose_first_player()
 window.mainloop()
