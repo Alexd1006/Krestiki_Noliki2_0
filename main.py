@@ -1,13 +1,23 @@
+from tkinter import simpledialog, messagebox
 import tkinter as tk
-from tkinter import messagebox
 
 window = tk.Tk()
 window.title("Крестики-нолики")
 window.geometry("300x380")
 
-current_player = "X"
+current_player = "X"  # начальное значение по умолчанию
 buttons = []
 game_over = False
+
+
+def choose_first_player():
+    global current_player
+    choice = simpledialog.askstring("Выбор игрока", "Кто ходит первым? (X или 0)", initialvalue="X")
+    if choice and choice.upper() in ["X", "0"]:
+        current_player = choice.upper()
+    else:
+        current_player = "X"
+        messagebox.showwarning("Некорректный выбор", "Выбран некорректный символ. Игрок X ходит первым.")
 
 
 def check_winner():
@@ -55,12 +65,12 @@ def on_click(row, col):
 
 
 def reset_game():
-    global current_player, game_over
-    current_player = "X"
-    game_over = False
+    global game_over
     for row in buttons:
         for btn in row:
             btn.config(text="")
+    game_over = False
+    choose_first_player()
 
 
 # Игровое поле
@@ -77,4 +87,5 @@ for i in range(3):
 reset_button = tk.Button(window, text="Новая игра", font=("Arial", 14), command=reset_game)
 reset_button.grid(row=3, column=0, columnspan=3, pady=10)
 
+choose_first_player()
 window.mainloop()
