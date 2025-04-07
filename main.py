@@ -3,19 +3,31 @@ import tkinter as tk
 
 window = tk.Tk()
 window.title("Крестики-нолики")
-window.geometry("300x420")
+window.geometry("300x460")
 
 current_player = "X"
 buttons = []
 game_over = False
 
-# Метка для отображения текущего игрока
+score_x = 0
+score_0 = 0
+draws = 0
+
+# Метка для текущего игрока
 current_player_label = tk.Label(window, text="", font=("Arial", 14))
-current_player_label.grid(row=5, column=0, columnspan=3, pady=10)
+current_player_label.grid(row=5, column=0, columnspan=3, pady=5)
+
+# Метка для счёта
+score_label = tk.Label(window, text="", font=("Arial", 12))
+score_label.grid(row=6, column=0, columnspan=3, pady=5)
 
 
 def update_player_label():
     current_player_label.config(text=f"Ход игрока: {current_player}")
+
+
+def update_score_label():
+    score_label.config(text=f"Счёт — X: {score_x} | 0: {score_0} | Ничьих: {draws}")
 
 
 def choose_first_player():
@@ -51,7 +63,7 @@ def check_draw():
 
 
 def on_click(row, col):
-    global current_player, game_over
+    global current_player, game_over, score_x, score_0, draws
 
     if buttons[row][col]['text'] != "" or game_over:
         return
@@ -61,14 +73,32 @@ def on_click(row, col):
     if check_winner():
         messagebox.showinfo("Игра окончена", f"Игрок {current_player} победил!")
         game_over = True
+        if current_player == "X":
+            score_x += 1
+        else:
+            score_0 += 1
+        update_score_label()
+        window.after(2000, reset_board)
         return
 
     if check_draw():
         messagebox.showinfo("Игра окончена", "Ничья!")
         game_over = True
+        draws += 1
+        update_score_label()
+        window.after(2000, reset_board)
         return
 
     current_player = "0" if current_player == "X" else "X"
+    update_player_label()
+
+
+def reset_board():
+    global game_over
+    for row in buttons:
+        for btn in row:
+            btn.config(text="")
+    game_over = False
     update_player_label()
 
 
@@ -99,5 +129,7 @@ reset_button.grid(row=3, column=0, columnspan=3, pady=10)
 exit_button = tk.Button(window, text="Выход", font=("Arial", 14), command=window.quit)
 exit_button.grid(row=4, column=0, columnspan=3, pady=10)
 
+# Запуск
 choose_first_player()
+update_score_label()
 window.mainloop()
